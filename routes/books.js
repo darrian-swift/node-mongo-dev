@@ -6,13 +6,13 @@ const fs = require('fs')
 const Author = require('../models/author')
 const Book = require('../models/book')
 
-const imageMimeTypes = ['images/jpeg', 'images/png', 'images/gif']
+const imageMimeTypes = ['image/jpeg', 'image/png', 'images/gif']
 const uploadPath = path.join('public', Book.coverImageBasePath)
-const upload = multer ({
-	dest: uploadPath, 
-	fileFilter:  (req, file, callback) => {
-		callback(null,imageMimeTypes.includes(file.mimetype))
-	}
+const upload = multer({
+  dest: uploadPath,
+  fileFilter: (req, file, callback) => {
+    callback(null, imageMimeTypes.includes(file.mimetype))
+  }
 })
 
 //all books route
@@ -45,13 +45,14 @@ router.get('/new', async(req, res) => {
 
 //create book route
 router.post('/', upload.single('cover'), async(req, res) => {
-	const filename = req.file != null ? req.file.filename : null 
+	const fileName = req.file != null ? req.file.filename : null 
+	
 	const book = new Book({
 		title: req.body.title,
 		author: req.body.author, 
 		publishDate: new Date(req.body.publishDate),
 		pageCount : req.body.pageCount, 
-		coverImageName: filename, 
+		coverImageName: fileName, 
 		description: req.body.description
 	}) 
 	try {
